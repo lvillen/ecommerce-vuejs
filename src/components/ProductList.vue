@@ -24,8 +24,9 @@
           </p>
           <p><span class="grey-text">Year: </span>{{ product.published }}</p>
         </div>
-        <div>
+        <div class="flex align-items-center justify-content-between">
           <StaticPrice :quantity="product.price" />
+          <AddToCartButton :product="product" @addItem="onAddItem" />
         </div>
       </li>
     </ul>
@@ -39,6 +40,7 @@ import { productService } from "@/services/products.ts";
 import { Product } from "@/types";
 
 import StaticPrice from "@/components/StaticPrice.vue";
+import AddToCartButton from "@/components/AddToCartButton.vue";
 
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
@@ -49,6 +51,7 @@ declare module "@vue/runtime-core" {
 export default defineComponent({
   components: {
     StaticPrice,
+    AddToCartButton,
   },
   data() {
     return {
