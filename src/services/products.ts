@@ -1,11 +1,12 @@
-import { Product } from '@/types';
+import { Product } from "@/types";
 
 export const productService = {
   async get(): Promise<Product[]> {
-    const books = await import(
-      /* webpackChunkName: "books" */ './books.mock.json'
-    ).then(m => m.default)
-    return books
+    const books = await fetch("/books.mock.json", {
+      headers: {
+        Accept: "application/json",
+      },
+    }).then((response) => response.json());
+    return books;
   },
-}
-
+};
