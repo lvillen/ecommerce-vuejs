@@ -9,6 +9,9 @@
         v-for="product in list"
         :key="product.id"
         class="grid product-container card"
+        :class="{
+          'product-container--has-discount': product.discount !== '0.0',
+        }"
       >
         <div class="product-container__content">
           <h2>
@@ -26,6 +29,7 @@
         </div>
         <div class="flex align-items-center justify-content-between">
           <StaticPrice :quantity="product.price" />
+          <span v-if="product.discount !== '0.0'">¡Producto con descuento!</span>
           <AddToCartButton :product="product" @addItem="onAddItem" />
         </div>
       </li>
@@ -66,7 +70,16 @@ export default defineComponent({
   async created() {
     this.list = await productService.get();
   },
+  methods: {
+    onAddItem(product: Product) {
+      console.log(product);
+    },
+  },
 });
 </script>
 
-<style></style>
+<style>
+.product-container--has-discount {
+  background-color: rgba(255, 238, 0, 0.4);
+}
+</style>
