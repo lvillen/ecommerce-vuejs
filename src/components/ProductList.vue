@@ -5,33 +5,39 @@
       total: {{ totalProducts }}
     </div>
     <ul>
-      <li
-        v-for="product in list"
-        :key="product.id"
-        class="grid product-container card"
-        :class="{
-          'product-container--has-discount': product.discount !== '0.0',
-        }"
-      >
-        <div class="product-container__content">
-          <h2>
-            {{ product.title }}
-          </h2>
-          <p>
-            <span class="grey-text">Author: </span>
-            <strong>{{ product.author }}</strong>
-          </p>
-          <p>
-            <span class="grey-text">Publisher: </span>
-            {{ product.publisher }}
-          </p>
-          <p><span class="grey-text">Year: </span>{{ product.published }}</p>
-        </div>
-        <div class="flex align-items-center justify-content-between">
-          <StaticPrice :quantity="product.price" />
-          <span v-if="product.discount !== '0.0'">¡Producto con descuento!</span>
-          <AddToCartButton :product="product" @addItem="onAddItem" />
-        </div>
+      <li v-for="product in list" :key="product.id">
+        <router-link :to="`/detail/${product.id}`">
+          <article
+            class="grid product-container card"
+            :class="{
+              'product-container--has-discount': product.discount !== '0.0',
+            }"
+          >
+            <div class="product-container__content">
+              <h2>
+                {{ product.title }}
+              </h2>
+              <p>
+                <span class="grey-text">Author: </span>
+                <strong>{{ product.author }}</strong>
+              </p>
+              <p>
+                <span class="grey-text">Publisher: </span>
+                {{ product.publisher }}
+              </p>
+              <p>
+                <span class="grey-text">Year: </span>{{ product.published }}
+              </p>
+            </div>
+            <div class="flex align-items-center justify-content-between">
+              <StaticPrice :quantity="product.price" />
+              <span v-if="product.discount !== '0.0'"
+                >¡Producto con descuento!</span
+              >
+              <AddToCartButton :product="product" @addItem="onAddItem" />
+            </div>
+          </article>
+        </router-link>
       </li>
     </ul>
   </section>
