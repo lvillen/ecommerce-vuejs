@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, Ref, ref, computed } from "vue";
 import { productService } from "@/services/products.ts";
 
 import { Product } from "@/types";
@@ -63,23 +63,38 @@ export default defineComponent({
     StaticPrice,
     AddToCartButton,
   },
-  data() {
-    return {
-      list: [] as Product[],
+  // data() {
+  //   return {
+  //     list: [] as Product[],
+  //   };
+  // },
+  // computed: {
+  //   totalProducts() {
+  //     return this.list.length;
+  //   },
+  // },
+  // async created() {
+  //   this.list = await productService.get();
+  // },
+  // methods: {
+  //   onAddItem(product: Product) {
+  //     console.log(product);
+  //   },
+  // },
+  async setup() {
+    const list: Ref<Product[]> = ref([]);
+    list.value = await productService.get();
+    const totalProducts = computed<number>(() => list.value.length);
+
+    const onAddItem = (product: Product) => {
+      console.log(product.title);
     };
-  },
-  computed: {
-    totalProducts() {
-      return this.list.length;
-    },
-  },
-  async created() {
-    this.list = await productService.get();
-  },
-  methods: {
-    onAddItem(product: Product) {
-      console.log(product);
-    },
+
+    return {
+      list,
+      totalProducts,
+      onAddItem,
+    };
   },
 });
 </script>
