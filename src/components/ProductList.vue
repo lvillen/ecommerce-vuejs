@@ -44,10 +44,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, computed } from "vue";
-import { productService } from "@/services/products.ts";
-
+import { defineComponent } from "vue";
 import { Product } from "@/types";
+import { useProductApi } from '@/composables/productsApi';
 
 import StaticPrice from "@/components/StaticPrice.vue";
 import AddToCartButton from "@/components/AddToCartButton.vue";
@@ -82,10 +81,7 @@ export default defineComponent({
   //   },
   // },
   async setup() {
-    const list: Ref<Product[]> = ref([]);
-    list.value = await productService.get();
-    const totalProducts = computed<number>(() => list.value.length);
-
+    const { list, totalProducts } = await useProductApi();  
     const onAddItem = (product: Product) => {
       console.log(product.title);
     };
