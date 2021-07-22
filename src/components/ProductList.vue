@@ -4,6 +4,16 @@
       <h1>Products</h1>
       total: {{ totalProducts }}
     </div>
+    <div>
+      <ul>
+        <li v-for="(category, index) of categories" :key="index">
+          <CategoryFilter
+            :category="category"
+            @selectedCategory="selectCategory"
+          />
+        </li>
+      </ul>
+    </div>
     <ul>
       <li v-for="product in list" :key="product.id">
         <router-link :to="`/detail/${product.id}`">
@@ -46,12 +56,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { Product } from "@/types";
 import { useProductApi } from "@/composables/productsApi";
 
 import StaticPrice from "@/components/StaticPrice.vue";
 import AddToCartButton from "@/components/AddToCartButton.vue";
+import CategoryFilter from "@/components/CategoryFilter.vue";
 
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
@@ -63,6 +74,7 @@ export default defineComponent({
   components: {
     StaticPrice,
     AddToCartButton,
+    CategoryFilter,
   },
   // data() {
   //   return {
@@ -88,7 +100,33 @@ export default defineComponent({
       console.log(product.title);
     };
 
+    const categories = list.value.reduce(
+      (accumulated: string[], current: Product) => {
+        if (!accumulated.some((category) => category === current.category)) {
+          accumulated.push(current.category);
+        }
+        return accumulated;
+      },
+      []
+    );
+
+    const selectedCategories: Ref<string[]> = ref([]);
+
+    const selectCategory = (category: string) => {
+      if (selectedCategories.value.indexOf(category) === -1) {
+        selectedCategories.value.push(category);
+      } else {
+        selectedCategories.value.splice(
+          selectedCategories.value.indexOf(category),
+          1
+        );
+      }
+    };
+
     return {
+      selectCategory,
+      selectedCategories,
+      categories,
       list,
       totalProducts,
       onAddItem,
