@@ -34,7 +34,9 @@
               <span v-if="product.discount !== '0.0'"
                 >¡Producto con descuento!</span
               >
-              <AddToCartButton :product="product" @addItem="onAddItem" />
+              <AddToCartButton :product="product" @addItem="onAddItem">
+                <span>Add to cart</span>
+              </AddToCartButton>
             </div>
           </article>
         </router-link>
@@ -46,7 +48,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Product } from "@/types";
-import { useProductApi } from '@/composables/productsApi';
+import { useProductApi } from "@/composables/productsApi";
 
 import StaticPrice from "@/components/StaticPrice.vue";
 import AddToCartButton from "@/components/AddToCartButton.vue";
@@ -81,7 +83,7 @@ export default defineComponent({
   //   },
   // },
   async setup() {
-    const { list, totalProducts } = await useProductApi();  
+    const { list, totalProducts } = await useProductApi();
     const onAddItem = (product: Product) => {
       console.log(product.title);
     };
