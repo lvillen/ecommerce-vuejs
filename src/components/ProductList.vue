@@ -2,7 +2,7 @@
   <section class="wrapper">
     <div class="flex align-items-center justify-content-between">
       <h1>Products</h1>
-      total: {{ totalProducts }}
+      total: {{ totalFilteredProducts }}
     </div>
     <div>
       <ul>
@@ -15,7 +15,7 @@
       </ul>
     </div>
     <ul>
-      <li v-for="product in list" :key="product.id">
+      <li v-for="product in filteredList" :key="product.id">
         <router-link :to="`/detail/${product.id}`">
           <article
             class="grid product-container card"
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from "vue";
+import { defineComponent, Ref, ref, computed } from "vue";
 import { Product } from "@/types";
 import { useProductApi } from "@/composables/productsApi";
 
@@ -123,12 +123,22 @@ export default defineComponent({
       }
     };
 
+    const filteredList = computed<Product[]>(() => {
+      return list.value.filter((product) => {
+        return selectedCategories.value.some((category) => {
+          return category === product.category;
+        });
+      });
+    });
+
+    const totalFilteredProducts = computed(() => filteredList.value.length);
+
     return {
       selectCategory,
       selectedCategories,
       categories,
-      list,
-      totalProducts,
+      filteredList,
+      totalFilteredProducts,
       onAddItem,
     };
   },
